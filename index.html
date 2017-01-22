@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
+    <title>/sug/ thread archives</title>
+    <link rel="stylesheet" href="reset.css">
+    <!-- lavalamp from this design: https://github.com/jgthms/lavalamp.js -->
+    <link rel="stylesheet" href="lavalamp.css" type="text/css">
+    <link rel="stylesheet" href="archives.css">
+</head>
+<body>
+    <a class="button" id="lavalamp-previous">
+        You're browsing /sug/ archives from Desuarchive
+    </a>
+    <ul id="post-list">
+    </ul>
+    <a class="button" id="lavalamp-next">
+        Load next
+    </a>
+    <a id="lavalamp" class="up-start">
+        <span>Loading</span>
+    </a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="lavalamp.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('body').lavalamp();
+        });
+    </script>
+</body>
+</html>
