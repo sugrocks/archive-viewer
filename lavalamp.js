@@ -1,10 +1,11 @@
 /* global jQuery, XMLHttpRequest */
 var page
-var canScroll = true
-var endSpeed = 500
+let canScroll = true
+let endSpeed = 500
 
 // We use a "hash" value in the URL to track page numbers
-var hashval = window.location.hash.substr(1)
+let hashval = window.location.hash.substr(1)
+
 if (hashval !== '' && !isNaN(hashval)) {
   page = parseInt(hashval, 10)
 } else {
@@ -12,16 +13,19 @@ if (hashval !== '' && !isNaN(hashval)) {
 }
 
 function findEdition (post) {
-  var regex = /.*edition.*\n/i
-  var edition = undefined
-  var m
+  const regex = /.*edition.*\n/i
+  let edition
+  let m
+
   if ((m = regex.exec(post)) !== null) {
     edition = m[0].replace('/sug/ Steven Universe General - ', '')
+
     if (edition.indexOf('[spoiler]') !== -1) {
-        // Adding myself the closing <s>, in case someone fail'd
-        edition = edition.replace('[spoiler]', '<s>').replace('[/spoiler]', '') + '</s>'
+      // Adding myself the closing <s>, in case someone fail'd
+      edition = edition.replace('[spoiler]', '<s>').replace('[/spoiler]', '') + '</s>'
     }
   }
+
   return edition
 }
 
@@ -32,32 +36,37 @@ function loadJson (callback = false) {
   } else {
     // It looks like we can't go above that
     if (page > 40) page = 40
+
     window.location.hash = '#' + page
     document.getElementById('lavalamp-previous').innerHTML = 'Load previous'
   }
 
-  var ul = document.getElementById('post-list')
-  var request = new XMLHttpRequest()
+  const ul = document.getElementById('post-list')
+  const request = new XMLHttpRequest()
 
   request.open('GET', 'https://desuarchive.org/_/api/chan/search/?board=co.trash&type=op&text=/sug/&page=' + page, true)
   request.onload = function () {
     if (this.status >= 200 && this.status < 400) {
-      var data = JSON.parse(this.response)
-      var posts = data['0']['posts']
+      const data = JSON.parse(this.response)
+      const posts = data['0']['posts']
       ul.innerHTML = ''
+
       for (var i = 0; i < posts.length; i++) {
-        var post = posts[i]
+        const post = posts[i]
+
         if ('media' in post) {
-          var edition = findEdition(post['comment'])
+          const edition = findEdition(post['comment'])
           if (edition === undefined) continue
 
-          var a = document.createElement('a')
+          const a = document.createElement('a')
+          const li = document.createElement('li')
+          const date = new Date(post['timestamp'] * 1000)
+          let content
+
           a.setAttribute('href', 'https://desuarchive.org/' + post['board']['shortname'] + '/thread/' + post['thread_num'])
 
-          var li = document.createElement('li')
-          var content = '<div class="img"><img src="' + post['media']['thumb_link'] + '"></div>'
+          content = '<div class="img"><img src="' + post['media']['thumb_link'] + '"></div>'
           content += '<div class="infos"><b>/' + post['board']['shortname'] + '/</b> N°' + post['thread_num']
-          var date = new Date(post['timestamp'] * 1000)
           content += '<br> ' + date.toLocaleDateString() + ' at ' + date.toLocaleTimeString()
           content += '<br><i>' + edition + '</i></div>'
 
@@ -66,6 +75,7 @@ function loadJson (callback = false) {
           ul.appendChild(a)
         }
       }
+
       if (callback) {
         callback()
       }
@@ -85,16 +95,16 @@ function loadJson (callback = false) {
   'use strict'
 
   $.fn.lavalamp = function () {
-    var self = this
-    var $window = $(window)
-    var $document = $(document)
-    var $lavalamp = self.find('#lavalamp')
-    var $previous = self.find('#lavalamp-previous')
-    var $next = self.find('#lavalamp-next')
+    const self = this
+    const $window = $(window)
+    const $document = $(document)
+    const $lavalamp = self.find('#lavalamp')
+    const $previous = self.find('#lavalamp-previous')
+    const $next = self.find('#lavalamp-next')
 
     self.animate = function (direction, scrollTarget) {
-      var startClass = direction + '-start'
-      var endClass = direction + '-end'
+      const startClass = direction + '-start'
+      const endClass = direction + '-end'
 
       canScroll = false
       $lavalamp.addClass(startClass)
@@ -102,6 +112,7 @@ function loadJson (callback = false) {
       loadJson(function () {
         $window.scrollTop(scrollTarget)
         $lavalamp.removeClass(startClass).addClass(endClass)
+
         setTimeout(function () {
           canScroll = true
           $lavalamp.removeClass()
@@ -131,8 +142,9 @@ function loadJson (callback = false) {
   }
 
   loadJson(function () {
-    var $lavalamp = $('#lavalamp')
+    const $lavalamp = $('#lavalamp')
     $lavalamp.removeClass('up-start').addClass('up-end')
+
     setTimeout(function () {
       $lavalamp.removeClass()
     }, endSpeed)
