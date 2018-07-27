@@ -1,5 +1,5 @@
 /* global jQuery, XMLHttpRequest */
-var page
+let page
 let canScroll = true
 let endSpeed = 500
 
